@@ -33,7 +33,7 @@
 #define GEAR_TEETH_PRIM         6         // 6 pins on the bottom of the prim cvt. 6 pulses = 1 revolution
 #define GEAR_TEETH_SEC          16        // 16-tooth gear: 16 pulses = 1 revolution
 
-#define REPORT_INTERVAL_US  10000     // Reporting window in microseconds (10 ms = 100 Hz output)
+#define REPORT_INTERVAL_US  2000     // Reporting window in microseconds (2 ms = 500 Hz output)
  // Smaller = faster response, noisier
  // Larger  = smoother, more latency
 
@@ -84,6 +84,7 @@ volatile uint8_t  intervalCountA = 0, intervalCountB = 0;
 volatile uint32_t lastPulseTimeA = 0, lastPulseTimeB = 0;
 
 uint32_t lastReportTime = 0;
+uint32_t lastFlushTime = 0;
 
 // ─── ISR: RECORD PULSE INTERVALS ──────────────────────────────────────────────
 // Instead of just counting pulses, we store the time gap between successive
@@ -220,7 +221,7 @@ void loop() {
            : 0.0f;
     recA.pulse_count  = snapCountA;
     logFileA.write((const uint8_t*)&recA, sizeof(recA));
-    logFileA.flush();
+    
 
     //channel b snapshot (sec)
     noInterrupts();
@@ -238,7 +239,7 @@ void loop() {
            : 0.0f;
     recB.pulse_count  = snapCountB;
     logFileB.write((const uint8_t*)&recB, sizeof(recB));
-    logFileB.flush();
+   
 
     //shows rpm as u go in terminal 
         if ((now - lastPrintTime) >= 1000000UL) {  // every 1 second
@@ -253,5 +254,11 @@ void loop() {
     Serial.print(recA.pulse_count);
     Serial.print("  B pulses: ");
     Serial.println(recB.pulse_count);
-}
+
+         if (millis() - lastFlushTime > 1000) {   // flush every 1 second
+    logFileA.flush();
+    logFileB.flush();
+    lastFlushTime = millis();
+      }
+   }
 }
