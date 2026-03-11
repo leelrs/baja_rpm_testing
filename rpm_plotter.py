@@ -10,6 +10,10 @@ to use: get in terminal, and slam out one of these.
 
     #if you want prim vs sec, you need to call with both .bins:
 
+Usage: get in terminal, and slam out one of these.
+
+    python rpm_plot.py RPM_A_0000.bin
+    python rpm_plot.py RPM_B_0003.bin
     python rpm_plot.py RPM_A_0000.bin RPM_B_0003.bin
 
     #make sure your .bin files are in the same directory as this one or just paste in the whole path. lol
