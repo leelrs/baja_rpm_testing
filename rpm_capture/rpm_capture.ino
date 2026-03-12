@@ -1,7 +1,7 @@
 
 
-//   - Pin 0: Optocoupler output from gear tooth sensor (Channel A) for primary, 
-//   - Pin 1: Optocoupler output from gear tooth sensor (Channel B ) for secondary.
+//   - Pin 27: Optocoupler output from gear tooth sensor (Channel A) for primary, 
+//   - Pin 26: Optocoupler output from gear tooth sensor (Channel B ) for secondary.
 //
 //sec: ~628 Hz pulse train from optocoupler for secondary.
 // prim: forgot. ill calc this later
