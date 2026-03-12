@@ -1,15 +1,13 @@
-// =============================================================================
-// RPM Capture Firmware — Teensy 4.1
-// =============================================================================
-// Hardware:
+
+
 //   - Pin 0: Optocoupler output from gear tooth sensor (Channel A) for primary, 
 //   - Pin 1: Optocoupler output from gear tooth sensor (Channel B ) for secondary.
 //
-// Signal: ~628 Hz pulse train from optocoupler for secondary.
-// Signal
+//sec: ~628 Hz pulse train from optocoupler for secondary.
+// prim: forgot. ill calc this later
 // Output: .bin file to sd card
 //
-// .bin file format (little-endian, packed structs):
+// .bin file format little endian, packd structs
 //   [Header: 16 bytes]
 //     uint32_t magic        = 0x52504D31  ("RPM1")
 //     uint32_t teeth        = GEAR_TEETH
@@ -19,7 +17,7 @@
 //     uint32_t timestamp_us  — micros() at sample time
 //     float    rpm           — computed RPM
 //     uint32_t pulse_count   — raw pulses in this window
-// =============================================================================
+
 
 #include <Arduino.h>
 #include <SD.h>
@@ -27,10 +25,10 @@
 
 // config
 
-#define SENSOR_PIN_A        0        // Primary optocoupler GPIO pin
-#define SENSOR_PIN_B        1         // Secondary optocoupler pin
+#define SENSOR_PIN_A        26       // Primary optocoupler GPIO pin
+#define SENSOR_PIN_B        27         // Secondary optocoupler pin
 
-#define GEAR_TEETH_PRIM         6         // 6 pins on the bottom of the prim cvt. 6 pulses = 1 revolution
+#define GEAR_TEETH_PRIM         4         // 4 pins on the bottom of the prim cvt. 4 pulses = 1 revolution (why did i think 6??)
 #define GEAR_TEETH_SEC          16        // 16-tooth gear: 16 pulses = 1 revolution
 
 #define REPORT_INTERVAL_US  10000     // Reporting window in microseconds (10 ms = 100 Hz output)
@@ -42,6 +40,7 @@
  // 8 = smooth rolling average
 
 #define OPTOCOUPLER_ACTIVE  HIGH      // Signal level when gear tooth is detected. light turns on when conducting -> high
+//i lied i think its off when gear tooth detected this will change the pullups...
  
   
 #define SD_CS_PIN BUILTIN_SDCARD
@@ -132,10 +131,17 @@ void setup() {
 //the optocoupler light turns on whenever the gear tooth sees a hit. so its active high
 //forced pulldown, if there is no data thru one of the lines the pin's just floating on the teensy so pull it low.
 //trigger edge to rising as its active high.
+
+//not gonna touch prim bc it works.
 pinMode(SENSOR_PIN_A, INPUT_PULLDOWN);
-pinMode(SENSOR_PIN_B, INPUT_PULLDOWN);
+
+//i think the sec sensor is a little different in terms of how it works. its on when no tooth, and when it sees a tooth it turns off. thats active low...
+pinMode(SENSOR_PIN_B, INPUT_PULLUP);
+
 attachInterrupt(digitalPinToInterrupt(SENSOR_PIN_A), isr_pin_a, RISING);
-attachInterrupt(digitalPinToInterrupt(SENSOR_PIN_B), isr_pin_b, RISING);
+
+//if active low, it needs to find falling edges not rising.
+attachInterrupt(digitalPinToInterrupt(SENSOR_PIN_B), isr_pin_b, FALLING);
 
 
 //for debugging mostly.
@@ -250,5 +256,5 @@ void loop() {
     Serial.print(recA.pulse_count);
     Serial.print("  B pulses: ");
     Serial.println(recB.pulse_count);
-}
+    }
 }

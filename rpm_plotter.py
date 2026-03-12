@@ -140,10 +140,12 @@ def plot_bin(path: Path) -> None:
 
     plt.tight_layout()
 
-    png_path = path.with_suffix(".png")
-    fig.savefig(png_path, dpi=150, bbox_inches="tight", facecolor=fig.get_facecolor())
-    print(f"[✓] Saved → {png_path}")
-    plt.close(fig)
+    # png_path = path.with_suffix(".png")
+    # fig.savefig(png_path, dpi=150, bbox_inches="tight", facecolor=fig.get_facecolor())
+    # print(f"[✓] Saved → {png_path}")
+    # plt.close(fig)
+
+    plt.show()
 
 
 
@@ -208,11 +210,13 @@ def plot_primary_vs_secondary(path_a: Path, path_b: Path) -> None:
     plt.tight_layout()
 
     #save primvsec graph 
-    run_id = path_a.stem.replace("RPM_A_", "")
-    png_path = path_a.parent / f"RPM_AB_{run_id}.png"
-    fig.savefig(png_path, dpi=150, bbox_inches="tight", facecolor=fig.get_facecolor())
-    print(f"[✓] Saved → {png_path}")
-    plt.close(fig)
+    # run_id = path_a.stem.replace("RPM_A_", "")
+    # png_path = path_a.parent / f"RPM_AB_{run_id}.png"
+    # fig.savefig(png_path, dpi=150, bbox_inches="tight", facecolor=fig.get_facecolor())
+    # print(f"[✓] Saved → {png_path}")
+    # plt.close(fig)
+
+    plt.show()
 
 
 
