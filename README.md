@@ -5,4 +5,6 @@ standalone files to record .bin and plot rpm curves from a geartooth sensor
 
 .ino -> 2 bin files e.g RPM_A_0003.bin & RPM_B_0003.bin
 
-.py -> run in terminal, outputs 2 rpm curves with mean rpm and peak. saves at .bin location.
+.py -> run in terminal, outputs 2 rpm curves with mean rpm and peak. 
+
+reference .bin file for primary rpm
